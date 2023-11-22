@@ -69,4 +69,12 @@ class MenuViewList(View):
             datos ={ 'message':'success', 'menu':rows}
             return JsonResponse(datos)
 
+class PerfilViewList(View):
+    def get(self, request, id_usuario):
+        lookup_field = 'id_usuario'
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT u.correo, p.sexo, p.peso, p.estatura FROM hidiet.perfil p inner join hidiet.usuario u on p.id_user = u.id_usuario where p.id_user=%s;", [id_usuario])
+            rows = dictfetchall(cursor)
+            datos ={ 'message':'success', 'perfil':rows}
+            return JsonResponse(datos)
 
