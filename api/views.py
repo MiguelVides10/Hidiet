@@ -37,37 +37,15 @@ class UsuariosView(View):
 class UsuarioCreateView(generics.CreateAPIView):
     queryset = Usuario.objects.all()
     serializer_class = UsuarioSerializer
-
-    @method_decorator(csrf_exempt)
-    def dispatch(self, request, *args: Any, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
-    
-    def post(self, request, *args, **kwargs):
-        # Obtener el JSON del cuerpo de la solicitud
-        json_data = request.data
-
-        # Validar que el JSON contiene las claves necesarias
-        if "correo" not in json_data or "contrasenia" not in json_data:
-            datos = {'message': 'Faltan campos en el JSON'}
-            return JsonResponse(datos, status=400)
-
-        # Crear un diccionario de datos con los campos necesarios
-        data = {
-            "correo": json_data["correo"],
-            "contrasenia": json_data["contrasenia"],
-        }
-
-        # Crear el serializador con los datos
-        serializer = self.get_serializer(data=data)
-
-        # Validar y procesar los datos
+    def post(self,request):
+        serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             self.perform_create(serializer)
-            datos = {'message': 'Usuario creado'}
+            datos ={'message':'usuario creado'}
             return JsonResponse(datos)
         else:
-            datos = {'message': 'No se guardó la información'}
-            return JsonResponse(datos, status=400)
+            datos ={'message':'No se guardo la info'}
+            return JsonResponse(datos)
         
 class EnfermesadViewList(View):
     @method_decorator(csrf_exempt)
