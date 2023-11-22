@@ -37,6 +37,11 @@ class UsuariosView(View):
 class UsuarioCreateView(generics.CreateAPIView):
     queryset = Usuario.objects.all()
     serializer_class = UsuarioSerializer
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args: Any, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+    
     def post(self, request, *args, **kwargs):
         # Obtener el JSON del cuerpo de la solicitud
         json_data = request.data
